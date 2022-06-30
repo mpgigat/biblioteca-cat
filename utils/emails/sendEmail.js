@@ -35,7 +35,6 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
         console.log(error);
         return error;
       } else {
-        console.log("ok");
         return res.status(200).json({
           
           success: true,

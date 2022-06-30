@@ -5,16 +5,16 @@ import subirArchivo from "../helpers/subir-archivo.js";
 import * as fs from 'fs'
 import path from 'path'
 import url from 'url'
-import cloudinary from 'cloudinary'
-import crypto from "crypto"
+import { v2 as cloudinary } from 'cloudinary'
 import sendEmail from "../utils/emails/sendEmail.js"
+// CLOUDINARY_URL=cloudinary://124178692885149:x7RpDrJVA9YrpPGIzsddfMHKDCY@dyocmaqis
+// cloudinary.config(process.env.CLOUDINARY_URL)
 
 
 const holdersHttp = {
 
     holderGet: async (req, res) => {
-        const {search} = req.query;
-
+        const { search } = req.query;
 
         const holder = await Holder.find(
             //{nombre:new RegExp(query,"i")}
@@ -45,7 +45,7 @@ const holdersHttp = {
     holderPost: async (req, res) => {
         const { name, email, password, document, rol, ficha, phone } = req.body;
 
-        const holder = new Holder({  name, email, password, document, rol, ficha, phone });
+        const holder = new Holder({ name, email, password, document, rol, ficha, phone });
 
         const salt = bcryptjs.genSaltSync();
         holder.password = bcryptjs.hashSync(password, salt)
@@ -64,7 +64,7 @@ const holdersHttp = {
         const document = "Super"
         const rol = "SUPER"
         const phone = "000000000"
-        const holder = new Holder({name, email, password, document, rol, ficha, phone });
+        const holder = new Holder({ name, email, password, document, rol, ficha, phone });
 
         const salt = bcryptjs.genSaltSync();
         holder.password = bcryptjs.hashSync(password, salt)
@@ -186,13 +186,13 @@ const holdersHttp = {
             if (holder.photo) {
                 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
                 const pathImage = path.join(__dirname, '../uploads/', holder.photo);
-                
-                if (fs.existsSync(pathImage)) {               
+
+                if (fs.existsSync(pathImage)) {
                     fs.unlinkSync(pathImage)
                 }
-                
+
             }
-           
+
             holder = await Holder.findByIdAndUpdate(id, { photo: nombre })
             //responder
             res.json({ nombre });
@@ -219,25 +219,37 @@ const holdersHttp = {
         }
     },
     cargarArchivoCloud: async (req, res) => {
+        cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_NAME,
+            api_key: process.env.CLOUDINARY_KEY,
+            api_secret: process.env.CLOUDINARY_SECRET,
+            secure: true
+        });
+
         const { id } = req.params;
         try {
             //subir archivo
 
             const { tempFilePath } = req.files.archivo
-            const { secure_url } = await cloudinary.uploader.upload(tempFilePath)
+            cloudinary.uploader.upload(tempFilePath,
+                { width: 250, crop: "limit" },
+                async function (error, result) {
+                    if (result) {
+                        let holder = await Holder.findById(id);
+                        if (holder.photo) {
+                            const nombreTemp = holder.photo.split('/')
+                            const nombreArchivo = nombreTemp[nombreTemp.length - 1] // hgbkoyinhx9ahaqmpcwl jpg
+                            const [public_id] = nombreArchivo.split('.')
+                            cloudinary.uploader.destroy(public_id)
+                        }
+                        holder = await Holder.findByIdAndUpdate(id, { photo: result.url })
+                        //responder
+                        res.json({ url: result.url });
+                    } else {
+                        res.json(error)
+                    }
 
-            //persona a la cual pertenece la foto
-            let holder = await Holder.findById(id);
-            if (holder.photo) {
-                console.log(Holder.foto);
-                const nombreTemp = Holder.foto.split('/')
-                const nombreArchivo = nombreTemp[nombreTemp.length - 1] // hgbkoyinhx9ahaqmpcwl jpg
-                const [public_id] = nombreArchivo.split('.')
-                cloudinary.uploader.destroy(public_id)
-            }
-            holder = await Holder.findByIdAndUpdate(id, { photo: secure_url })
-            //responder
-            res.json({ secure_url });
+                })
         } catch (error) {
             res.status(400).json({ error, 'general': 'Controlador' })
         }
@@ -255,33 +267,57 @@ const holdersHttp = {
             res.status(400).json({ error })
         }
     },
-    requestPasswordReset: async (req,res) => {
+    requestPasswordReset: async (req, res) => {
         //https://blog.logrocket.com/implementing-a-secure-password-reset-in-node-js/
         //https://www.youtube.com/watch?v=O49g_OVPe6Q
         //https://www.youtube.com/watch?v=KjheexBLY4A
-        const {email}=req.body
+        const { email } = req.body
         const holder = await Holder.findOne({ email });
-   
-        let resetToken = crypto.randomBytes(32).toString("hex");
 
-        const salt = bcryptjs.genSaltSync();
-        const hash = bcryptjs.hashSync(resetToken, salt)
-        const token = await generarJWT({
-            holder: holder._id,
-            token: hash,
-            createdAt: Date.now(),
-          });
+        //let resetToken = crypto.randomBytes(32).toString("hex");
 
-        
-        const link = `${process.env.CLIENT_URL}/api/holder/passwordreset?token=${resetToken}&id=${holder._id}`;
-        sendEmail(holder.email,"Password Reset Request",{name: holder.name,link},"./template/requestResetPassword.handlebars");
+        // const salt = bcryptjs.genSaltSync();
+        // const hash = bcryptjs.hashSync(resetToken, salt)
+        const token = await generarJWT(holder.id);
+
+        const link = `${process.env.CLIENT_URL}/api/holder/passwordreset?token=${token}&id=${holder._id}`;
+        sendEmail(holder.email, "Password Reset Request", { name: holder.name, link }, "./template/requestResetPassword.handlebars");
 
         res.json({
-            holder,
-            token,
-            link
+            // holder,
+            // token,
+            // link,
+            msg: "Email de recuperación enviado. No olvide revisar el spam"
+
         })
-      }
+    },
+    resetPassword: async (req, res) => {
+
+        let { password, holderId } = req.body
+        const salt = bcryptjs.genSaltSync();
+        password = bcryptjs.hashSync(password, salt)
+        const holder = await Holder.findByIdAndUpdate(holderId, { password });
+        if (holder) {
+            sendEmail(
+                holder.email,
+                "Password Reset Successfully",
+                {
+                    name: holder.name,
+                },
+                "./template/resetPassword.handlebars"
+            );
+            res.json({
+                msg: "Password Reset Ok"
+
+            })
+        } else {
+            res.json({
+                msg: "Se produjo un error! Intentelo de nuevo"
+
+            })
+        }
+
+    }
 
 }
 

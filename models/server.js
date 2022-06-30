@@ -2,11 +2,13 @@ import  express from 'express'
 import cors from 'cors'
 import {dbConnection} from '../database/config.js';
 import holder from '../routes/holder.js';
+import laptop from '../routes/laptop.js'
 import fileUpload from 'express-fileupload'
 
 class Server{
     constructor(){
         this.app=express();
+        //this.app.set('view engine', 'jade');
         this.port=process.env.PORT;
         this.conectarDB();
         this.middlewares();
@@ -31,6 +33,7 @@ class Server{
 
     routes(){
         this.app.use("/api/holder",    holder);
+        this.app.use("/api/laptop",    laptop);
         
     }
 

@@ -25,7 +25,7 @@ router.get('/:id',[
 
 
 router.post('/',[    
-    validarJWT,
+    //validarJWT,
     //validarRol('ADMIN','SUPER'), 
     check('name', 'El nombre es obligatorio!').not().isEmpty(),
     check('email', 'El correo no es válido').isEmail(),
@@ -80,6 +80,12 @@ router.post("/requestpasswordreset", [
     validarCampos
 ],   holdersHttp.requestPasswordReset);
 
+router.post("/passwordreset", [
+    validarJWT,
+    check("password","La contraseña es obligatoria").not().isEmpty(),
+    check('password', 'Password no es válido').isLength({ min: 8}),
+    validarCampos
+],   holdersHttp.resetPassword);
 
 //  SERVIDOR EXPRESS
 router.post('/upload/:id',[
@@ -90,6 +96,13 @@ router.post('/upload/:id',[
     validarCampos
 ],holdersHttp.cargarArchivo)
 
+router.post('/uploadcloud/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(helpersHolder.existeHolderById), 
+    validarExistaArchivo,
+    validarCampos
+],holdersHttp.cargarArchivoCloud)
 
 router.get("/upload/:id",[
     validarJWT,
@@ -97,6 +110,13 @@ router.get("/upload/:id",[
     check('id').custom(helpersHolder.existeHolderById), 
     validarCampos   
 ],holdersHttp.mostrarImagen)
+
+router.get("/uploadcloud/:id",[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(helpersHolder.existeHolderById), 
+    validarCampos   
+],holdersHttp.mostrarImagenCloud)
 
 // SERVIDOR CLOUD
 router.post('/uploadcloud/:id',[
