@@ -20,13 +20,13 @@ const generarJWT = (uid) => {
 
 const validarJWT = async (req, res, next) => {
     const token = req.header("x-token");
-console.log("miguel555", token);
+console.log("m7777",token);
 
-   // if (!token) {
+    if (!token) {
         return res.status(401).json({
-            msg:`el token es: ${token}`
+            msg: "No hay token en la peticion"
         })
-   // }
+    }
 
     try {
         const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY)
