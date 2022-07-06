@@ -19,11 +19,11 @@ const generarJWT = (uid) => {
 }
 
 const validarJWT = async (req, res, next) => {
-    const token = req.header("token");
+    const token = req.header("x-token");
 
    // if (!token) {
         return res.status(401).json({
-            msg:`el token es: ${token}`
+            msg:`el token es: ${req}`
         })
    // }
 
