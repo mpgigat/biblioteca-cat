@@ -24,7 +24,7 @@ console.log("miguel", req);
 
    // if (!token) {
         return res.status(401).json({
-            msg:`el token es: ${Object.prototype.toString.call(req)}`
+            msg:`el token es: ${token}`
         })
    // }
 
