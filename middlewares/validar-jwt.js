@@ -20,6 +20,7 @@ const generarJWT = (uid) => {
 
 const validarJWT = async (req, res, next) => {
     const token = req.header("x-token");
+console.log(req);
 
    // if (!token) {
         return res.status(401).json({
