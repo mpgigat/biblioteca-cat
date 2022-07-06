@@ -55,6 +55,7 @@ router.put('/:id',[
 
 router.put('/activate/:id',[
     validarJWT, 
+    validarRol('ADMIN'), 
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(helpersHolder.existeHolderById),
     validarCampos
@@ -62,6 +63,7 @@ router.put('/activate/:id',[
 
 router.put('/unactivate/:id',[
     validarJWT,
+    validarRol('ADMIN'), 
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(helpersHolder.existeHolderById),
     validarCampos
