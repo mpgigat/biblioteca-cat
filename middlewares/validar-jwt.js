@@ -23,7 +23,7 @@ const validarJWT = async (req, res, next) => {
 
    // if (!token) {
         return res.status(401).json({
-            msg:`el token es: `
+            msg:`el token es: ${token}`
         })
    // }
 
