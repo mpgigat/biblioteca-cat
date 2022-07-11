@@ -3,6 +3,7 @@ import cors from 'cors'
 import {dbConnection} from '../database/config.js';
 import holder from '../routes/holder.js';
 import laptop from '../routes/laptop.js'
+import entry from '../routes/entry.js'
 import fileUpload from 'express-fileupload'
 
 class Server{
@@ -34,6 +35,7 @@ class Server{
     routes(){
         this.app.use("/api/holder",    holder);
         this.app.use("/api/laptop",    laptop);
+        this.app.use("/api/entry",    entry);
         
     }
 

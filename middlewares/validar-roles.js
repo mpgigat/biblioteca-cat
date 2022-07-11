@@ -1,6 +1,6 @@
 const validarRol = (...roles) => {
     return (req, res, next) => {
-console.log(req.holder);
+
       //  ["APRENDIZ","ADMIN","INSTRUCTOR","ADMINISTRATIVO","PUBLICO","BIBLIOTECA"];
 
         if (!(roles.includes(req.holder.rol))) {

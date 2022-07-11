@@ -1,5 +1,5 @@
 import Holder from "../models/holder.js"
-import mongoose from "mongoose"
+
 
 const helpersHolder={
     existeHolderById : async (id) => {

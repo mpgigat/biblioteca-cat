@@ -157,7 +157,7 @@ const laptopHttp = {
             })
             try {
                 code39.getBase64(function (err, imagsrc) {
-                    console.log("hola");
+         
 
                     if (err) throw new Error(err);
                     res.end(imagsrc)

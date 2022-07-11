@@ -42,7 +42,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
       }
     });
   } catch (error) {
-    console.log("jj",error);
+
     return error;
   }
 };
