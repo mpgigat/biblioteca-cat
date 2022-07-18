@@ -42,11 +42,11 @@ const holdersHttp = {
             holder
         })
     },
+         
     holderPost: async (req, res) => {
         const { name, email, password, document, rol, ficha, phone } = req.body;
-        let createdAt = Date.now();
         
-        const holder = new Holder({ name, email, password, document, rol, ficha, phone ,createdAt});
+        const holder = new Holder({ name, email, password, document, rol, ficha, phone });
 
         const salt = bcryptjs.genSaltSync();
         holder.password = bcryptjs.hashSync(password, salt)
@@ -56,7 +56,6 @@ const holdersHttp = {
         res.json({
             holder
         })
-
     },
 
     holderPostSuper: async (req, res) => {
