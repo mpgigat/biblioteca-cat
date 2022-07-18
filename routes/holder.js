@@ -4,7 +4,7 @@ import helpersHolder from "../helpers/db-holder.js"
 import {check} from 'express-validator';
 import { validarCampos } from '../middlewares/validar-campos.js';
 import {validarJWT} from '../middlewares/validar-jwt.js';
-import {validarRol} from '../middlewares/validar-roles.js';
+import {validarRol} from '../middlewares/validar_roles.js';
 import validarExistaArchivo from '../middlewares/validar-exista-archivo.js';
 import holdersHttp from '../controllers/holder.js';
 

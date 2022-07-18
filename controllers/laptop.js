@@ -48,9 +48,9 @@ const laptopHttp = {
     },
 
     laptopPost: async (req, res) => {
-        const { holder, serial, observation } = req.body;
+        const { holder, serial, observations } = req.body;
 
-        const laptop = new Laptop({ holder, serial, observation });
+        const laptop = new Laptop({ holder, serial, observations });
 
         await laptop.save()
 
@@ -146,6 +146,7 @@ const laptopHttp = {
             }
         }
     },
+
     laptopBarcodeHtml: async (req, res) => {
         const { id } = req.params
         const existe = await Laptop.findById(id)
@@ -172,6 +173,7 @@ const laptopHttp = {
         }
 
     },
+    
     prueba: async (req, res) => {
         
         

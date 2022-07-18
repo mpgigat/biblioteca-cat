@@ -2,12 +2,15 @@ import Holder from "../models/holder.js"
 
 
 const helpersHolder={
-    existeHolderById : async (id) => {
+    existeHolderById : async (id,req) => {
         const existe = await Holder.findById(id)
 
         if (!existe) {
             throw new Error(`El id no existe ${id}`)
         }
+
+        req.req.holderUpdate=existe
+
     },
 
     existeEmail :async (email,req) => {
@@ -45,7 +48,7 @@ const helpersHolder={
     },
 
     existeNumDocumento: async (document, req) => {
-        if (document) {  
+        if (document) { 
             const existe = await Holder.findOne({ document })
             if (existe) {
                 if (req.req.method === "PUT") {

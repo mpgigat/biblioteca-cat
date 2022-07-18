@@ -13,4 +13,6 @@ const validarRol = (...roles) => {
     }
 }
 
+
+
 export { validarRol }

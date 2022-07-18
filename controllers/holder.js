@@ -7,9 +7,9 @@ import path from 'path'
 import url from 'url'
 import { v2 as cloudinary } from 'cloudinary'
 import sendEmail from "../utils/emails/sendEmail.js"
+import tools from "../helpers/tools.js";
 // CLOUDINARY_URL=cloudinary://124178692885149:x7RpDrJVA9YrpPGIzsddfMHKDCY@dyocmaqis
 // cloudinary.config(process.env.CLOUDINARY_URL)
-
 
 const holdersHttp = {
 
@@ -44,8 +44,9 @@ const holdersHttp = {
     },
     holderPost: async (req, res) => {
         const { name, email, password, document, rol, ficha, phone } = req.body;
-
-        const holder = new Holder({ name, email, password, document, rol, ficha, phone });
+        let createdAt = Date.now();
+        
+        const holder = new Holder({ name, email, password, document, rol, ficha, phone ,createdAt});
 
         const salt = bcryptjs.genSaltSync();
         holder.password = bcryptjs.hashSync(password, salt)
@@ -80,13 +81,13 @@ const holdersHttp = {
     holderPut: async (req, res) => {
         const { id } = req.params;
 
+        let { _id, email, state, password, createdAt,photo, ...resto } = req.body;
 
-        const { _id, email, state, password, createdAt, ...resto } = req.body;
-
-        if (password) {
-            const salt = bcryptjs.genSaltSync();
-            resto.password = bcryptjs.hashSync(password, salt)
-        }
+        resto=tools.actualizarResto(resto.document,resto)
+        resto=tools.actualizarResto(resto.name, resto)
+        resto=tools.actualizarResto(resto.rol,resto)
+        resto=tools.actualizarResto(resto.ficha,resto)
+        resto=tools.actualizarResto(resto.phone,resto)
 
         const holder = await Holder.findByIdAndUpdate(id, resto);
 

@@ -4,7 +4,7 @@ import helpersLaptop from '../helpers/db-laptop.js';
 import helpersHolder from "../helpers/db-holder.js"
 import { validarCampos } from '../middlewares/validar-campos.js';
 import { validarJWT } from '../middlewares/validar-jwt.js';
-import { validarRol } from '../middlewares/validar-roles.js';
+import { validarRol } from '../middlewares/validar_roles.js';
 import {check} from 'express-validator';
 
 const router=Router();
