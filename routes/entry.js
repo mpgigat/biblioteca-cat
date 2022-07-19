@@ -33,6 +33,12 @@ router.get('/date/:datefilter',[
     validarCampos   
 ],entryHttp.entryGetDateFilter);
 
+router.get('/date/:initialdate/:finaldate',[
+    validarJWT,
+    check('initialdate').isDate(),
+    check('finaldate').isDate(),
+    validarCampos   
+],entryHttp.entryGetDateBetween);
 
 router.post('/',[    
     validarJWT,

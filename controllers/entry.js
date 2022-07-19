@@ -23,13 +23,34 @@ const entryHttp = {
     },
 
     entryGetDateFilter: async (req, res) => {
-
         const { datefilter } = req.params;
-
         let fechaI=`${datefilter}T00:00:00.000-05:00`
-        let fechaF=`${datefilter}T23:59:59.000-05:00`
+        let fechaF=`${datefilter}T23:59:59.000-05:00`                                 
+        const entry = await Entry.find({
+            $and: [
+              {
+                entrytime: {
+                  $gte: new Date(fechaI)
+                }
+              },
+              {
+                entrytime: {
+                  $lte: new Date(fechaF)
+                }
+              }
+            ]
+          }
+        );
 
-                                 
+        res.json({
+            entry
+        })
+    },
+
+    entryGetDateBetween: async (req, res) => {
+        const { initialdate,finaldate } = req.params;
+        let fechaI=`${initialdate}T00:00:00.000-05:00`
+        let fechaF=`${finaldate}T23:59:59.000-05:00`                                 
         const entry = await Entry.find({
             $and: [
               {
