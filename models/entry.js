@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import tools from "../helpers/tools.js";
+
 
 const entrySchema=new mongoose.Schema({
     laptop:{type:mongoose.Schema.Types.ObjectId,ref:'Laptop',required:true,    },

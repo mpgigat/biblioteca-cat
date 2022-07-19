@@ -26,6 +26,12 @@ router.get('/:id',[
     check('id').custom(helpersEntry.existeEntryById), 
     validarCampos   
 ],entryHttp.entryGetById);
+   
+router.get('/date/:datefilter',[
+    validarJWT,
+    check('datefilter').isDate(),
+    validarCampos   
+],entryHttp.entryGetDateFilter);
 
 
 router.post('/',[    
