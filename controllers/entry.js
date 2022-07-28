@@ -4,7 +4,7 @@ const entryHttp = {
 
     entryGetUsuario: async (req, res) => {
         const { id } = req.params;
-        const entry = await Entry.find({holder:id});
+        const entry = await Entry.find({holder:id}).populate("holder").populate("laptop");
 
         res.json({
             entry
@@ -15,7 +15,7 @@ const entryHttp = {
 
         const { id } = req.params;
 
-        const entry = await Entry.findById(id);
+        const entry = await Entry.findById(id).populate("holder").populate("laptop");
 
         res.json({
             entry
@@ -40,7 +40,7 @@ const entryHttp = {
               }
             ]
           }
-        );
+        ).populate("holder").populate("laptop");
 
         res.json({
             entry
@@ -65,7 +65,7 @@ const entryHttp = {
               }
             ]
           }
-        );
+        ).populate("holder").populate("laptop");
 
         res.json({
             entry

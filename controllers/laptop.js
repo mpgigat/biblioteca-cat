@@ -18,7 +18,7 @@ const laptopHttp = {
                     { serial: new RegExp(search, "i") }
                 ]
             }
-        );
+        ).populate("holder");
 
         res.json({
             laptop
@@ -29,7 +29,7 @@ const laptopHttp = {
 
         const { id } = req.params;
 
-        const laptop = await Laptop.findById(id);
+        const laptop = await Laptop.findById(id).populate("holder");
 
         res.json({
             laptop
@@ -40,7 +40,7 @@ const laptopHttp = {
 
         const { id } = req.params;
 
-        const laptop = await Laptop.find({ holder: id });
+        const laptop = await Laptop.find({ holder: id }).populate("holder");
 
         res.json({
             laptop

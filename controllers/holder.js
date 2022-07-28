@@ -237,7 +237,6 @@ const holdersHttp = {
         const { id } = req.params;
         try {
             //subir archivo
-
             const { tempFilePath } = req.files.archivo
             cloudinary.uploader.upload(tempFilePath,
                 { width: 250, crop: "limit" },
