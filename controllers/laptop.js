@@ -148,14 +148,18 @@ const laptopHttp = {
     },
 
     laptopBarcodeHtml: async (req, res) => {
+      
+        
         const { id } = req.params
         const existe = await Laptop.findById(id)
         if (existe) {
-            const code39 = barcode('code39', {
-                data: existe.serial,
+            const code39 = barcode('code128', {
+                data: "its work",
                 width: 400,
                 height: 100
             })
+            console.log("hoal");
+            
             try {
                 code39.getBase64(function (err, imagsrc) {
          
@@ -174,14 +178,21 @@ const laptopHttp = {
 
     },
     
-    prueba: async (req, res) => {
+    laptopBarcodeSvg: async (req, res) => {
         
-        
+        const { id } = req.params
+        const existe = await Laptop.findById(id)
+
+        if (!existe) {
+            res.json({ msg: "Error!!!" })
+            return
+        }
+
         const xmlSerializer = new XMLSerializer();
         const document = new DOMImplementation().createDocument('http://www.w3.org/1999/xhtml', 'html', null);
         const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         
-        JsBarcode(svgNode, 'test', {
+        JsBarcode(svgNode, existe.serial, {
             xmlDocument: document,
         });
         
