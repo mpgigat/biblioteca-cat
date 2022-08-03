@@ -1,32 +1,44 @@
-const numeros=[]
 
-while (true) {
-    const numero=parseInt(prompt("Digite numero"))
-    if (numero<=0) break
-    numeros.push(numero)
-}
+import fs from "fs"
+fs.readFile('borrar.txt', 'utf8', function (err, data) {
+    if (err) {
+        return console.log(err);
+    }
 
-let mayor=-1000
-let menor=1000
-let acuNumeros=0
-for (let i = 0; i < numeros.length; i++) {
-    if( numeros[i]>mayor     ){
-        mayor=numeros[i]
-    }
-    if( numeros[i]<menor     ){
-        menor=numeros[i]
-    }
-    acuNumeros=acuNumeros+numeros[i]
-}
-let media=acuNumeros/numeros.length
+    console.log(data);
+});
 
+import readline from "readline"
 
-numeros.forEach((numero)=>{
-    if( numero>mayor     ){
-        mayor=numero
+var reader = readline.createInterface({
+    input: fs.createReadStream('borrar.txt')
+});
+
+reader.on('line', function (linea) {
+    console.log(linea);
+});
+
+fs.writeFile("nuevo.txt", "Primera línea\nSegunda línea", function (err) {
+    if (err) {
+        return console.log(err);
     }
-    if( numero<menor     ){
-        menor=numero
+
+    console.log("El archivo fue creado correctamente");
+});
+
+var stream = fs.createWriteStream("nuevo2.txt");
+stream.once('open', function (fd) {
+    stream.write("Primera línea\n");
+    stream.write("Segunda línea\n");
+    stream.end();
+});
+
+fs.stat('nuevo.txt', function (err) {
+    if (err == null) {
+        console.log("El archivo existe");
+    } else if (err.code == 'ENOENT') {
+        console.log("el archivo no existe");
+    } else {
+        console.log(err); // ocurrió algún error
     }
-    acuNumeros=acuNumeros+numero
 })
