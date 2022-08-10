@@ -42,7 +42,7 @@ router.get('/date/:initialdate/:finaldate',[
 
 router.post('/',[    
     validarJWT,
-    validarRol('GUARDA','BIBLIOTECA'), 
+    validarRol('GUARDA','BIBLIOTECA','ADMIN'), 
     check('laptop', 'No es un ID válido').isMongoId(),
     check('laptop').custom(helpersLaptop.existeLaptopById), 
     check('holder', 'No es un ID válido').isMongoId(),
