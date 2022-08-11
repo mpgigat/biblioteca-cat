@@ -24,6 +24,17 @@ const helpersLaptop = {
                 }
             }
         }
+    },
+
+    existeSerialVerifica: async (serial, req) => {
+        if (serial) {
+            const existe = await Laptop.findOne({ serial })
+            if (!existe) {
+                
+                    throw new Error(`No existe ese serial en la base de datos! ${serial}`)
+                
+            }
+        }
     }
 }
    

@@ -43,8 +43,8 @@ router.get('/date/:initialdate/:finaldate',[
 router.post('/',[    
     validarJWT,
     validarRol('GUARDA','BIBLIOTECA','ADMIN'), 
-    check('laptop', 'No es un ID válido').isMongoId(),
-    check('laptop').custom(helpersLaptop.existeLaptopById), 
+    check('laptop').not().isEmpty(),
+    check('laptop').custom(helpersLaptop.existeSerialVerifica), 
     check('holder', 'No es un ID válido').isMongoId(),
     check('holder').custom(helpersHolder.existeHolderById), 
     validarCampos       

@@ -1,10 +1,13 @@
 import Entry from "../models/entry.js"
+import Laptop from "../models/laptop.js";
 
 const entryHttp = {
 
     entryGetUsuario: async (req, res) => {
         const { id } = req.params;
-        const entry = await Entry.find({holder:id}).populate("holder").populate("laptop");
+        const entry = await Entry.find({holder:id})
+        .populate("holder")
+        .populate("laptop");
 
         res.json({
             entry
@@ -74,8 +77,8 @@ const entryHttp = {
 
     entryPost: async (req, res) => {
         const { holder, laptop } = req.body;
-
-        const entry = new Entry({ holder, laptop });
+        let laptopSearch = await Laptop.findOne({serial:laptop})
+        const entry = new Entry({ holder, laptop:laptopSearch._id });
 
         await entry.save()
 
