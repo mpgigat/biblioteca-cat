@@ -98,7 +98,6 @@ const holdersHttp = {
 
         const holder = await Holder.findByIdAndUpdate(id, resto);
 
-
         res.json({
             holder
         })

@@ -109,6 +109,19 @@ const entryHttp = {
 
   },
 
+  entryPut: async (req, res) => {
+    const { id } = req.params;
+
+    const today = new Date();
+ 
+    const entry = await Entry.findByIdAndUpdate(id, { checkout: today });
+
+    res.json({
+      entry
+    })
+
+  },
+
 
 }
 export default entryHttp

@@ -50,7 +50,13 @@ router.post('/',[
     validarCampos       
 ], entryHttp.entryPost   );
 
-
+router.put('/:id',[    
+    validarJWT,
+    validarRol('GUARDA','BIBLIOTECA','ADMIN'),  
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(helpersEntry.existeEntryById), 
+    validarCampos       
+], entryHttp.entryPut   );
 
 
 
