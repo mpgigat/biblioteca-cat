@@ -8,6 +8,7 @@ import {validarRol} from '../middlewares/validar_roles.js';
 import helpersLaptop from '../helpers/db-laptop.js';
 import helpersHolder from '../helpers/db-holder.js';
 import helpersEntry from '../helpers/db-entry.js';
+import holder from '../models/holder.js';
 
 
 const router=Router();
@@ -39,6 +40,20 @@ router.get('/date/:initialdate/:finaldate',[
     check('finaldate').isDate(),
     validarCampos   
 ],entryHttp.entryGetDateBetween);
+
+router.get('/date/pendientes/entrega/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(helpersHolder.existeHolderById), 
+    validarCampos   
+],entryHttp.entryGetPendientesEntrega);
+
+router.get('/date/pendientes/total/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(helpersHolder.existeHolderById), 
+    validarCampos   
+],entryHttp.entryGetPendientesTotal); 
 
 router.post('/',[    
     validarJWT,

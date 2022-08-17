@@ -96,6 +96,36 @@ const entryHttp = {
     })
   },
 
+  
+  entryGetPendientesEntrega: async (req, res) => {
+    const { id } = req.params;
+
+    const entry = await Entry.find({
+      checkout:"",holder:id
+    }).populate("holder").populate({
+      path: "laptop",
+      populate: {
+        path: "holder"
+      }
+    });
+
+    res.json({
+      entry
+    })
+  },
+
+  entryGetPendientesTotal: async (req, res) => {
+    const { id } = req.params;
+
+    const entry = await Entry.find({
+      checkout:"",holder:id
+    })
+
+    res.json({
+      total:entry.length
+    })
+  },
+
   entryPost: async (req, res) => {
     const { holder, laptop } = req.body;
     let laptopSearch = await Laptop.findOne({ serial: laptop })
@@ -113,7 +143,7 @@ const entryHttp = {
     const { id } = req.params;
 
     const today = new Date();
- 
+
     const entry = await Entry.findByIdAndUpdate(id, { checkout: today });
 
     res.json({
