@@ -32,6 +32,17 @@ const holdersHttp = {
         })
     },
 
+    holderGetByRol: async (req, res) => {
+        const { rol } = req.params;
+
+        const holder = await Holder.find({rol});
+
+        res.json({
+            holder
+        })
+    },
+
+
     holderGetById: async (req, res) => {
 
         const { id } = req.params;

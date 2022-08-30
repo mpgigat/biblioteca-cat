@@ -1,20 +1,33 @@
 import Holder from "../models/holder.js"
 
 
-const helpersHolder={
-    existeHolderById : async (id,req) => {
+const helpersHolder = {
+    existeHolderById: async (id, req) => {
         const existe = await Holder.findById(id)
 
         if (!existe) {
             throw new Error(`El id no existe ${id}`)
         }
 
-        req.req.holderUpdate=existe
+        req.req.holderUpdate = existe
 
     },
 
-    existeEmail :async (email,req) => {
-        if (email) {  
+    existeHolderByDocument: async (document, req) => {      
+        
+        if (document && req.req.holder.rol == "BIBLIOTECARIA") {
+            console.log("llegue");
+            const existe = await Holder.findOne({ document })
+
+            if (!existe ) {
+                throw new Error(`El documento no existe ${id}`)
+            }
+        }
+
+    },
+
+    existeEmail: async (email, req) => {
+        if (email) {
             const existe = await Holder.findOne({ email })
             if (existe) {
                 if (req.req.method === "PUT") {
@@ -24,14 +37,14 @@ const helpersHolder={
                 } else {
                     throw new Error(`Ya existe ese email en la base de datos!!! ${email}`)
                 }
-            }            
+            }
         }
     },
 
-    verificarEmail :() => {
+    verificarEmail: () => {
         return async (req, res, next) => {
             const existe = await Holder.findOne({ email: req.body.email });
-           
+
             if (!existe) {
                 return res.status(401).json({ msg: `El email no está registrado` });
             }
@@ -41,14 +54,14 @@ const helpersHolder={
     },
 
     existeAdmin: async (rol, req) => {
-        const existe = await Holder.findOne({ rol: "ADMIN" })    
-    
+        const existe = await Holder.findOne({ rol: "ADMIN" })
+
         if (existe)
             throw new Error(`Ya existe ese email en la base de datos! ${email}`)
     },
 
     existeNumDocumento: async (document, req) => {
-        if (document) { 
+        if (document) {
             const existe = await Holder.findOne({ document })
             if (existe) {
                 if (req.req.method === "PUT") {
@@ -58,10 +71,10 @@ const helpersHolder={
                 } else {
                     throw new Error(`Ya existe ese documento en la base de datos!!! ${document}`)
                 }
-            }            
+            }
         }
     },
-   
+
 
 }
 export default helpersHolder

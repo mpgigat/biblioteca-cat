@@ -1,12 +1,35 @@
 import Entry from "../models/entry.js"
 import Laptop from "../models/laptop.js";
+import Holder from "../models/holder.js";
 
 const entryHttp = {
 
-  entryGetUsuario: async (req, res) => {
+    entryGetById: async (req, res) => {
+
     const { id } = req.params;
-    const entry = await Entry.find({ holder: id })
+
+    const entry = await Entry.findById(id)
+      .populate("documentlearner")
+      .populate("place")
       .populate("holder")
+      .populate({
+        path: "laptop",
+        populate: {
+          path: "holder"
+        }
+      });
+
+    res.json({
+      entry
+    })
+  },
+
+  entryGetHistoricalHolder: async (req, res) => {
+    const { holder } = req.params;
+    const entry = await Entry.find({ holder })
+      .populate("holder")
+      .populate("place")
+      .populate("documentlearner")
       .populate({
         path: "laptop",
         populate: {
@@ -19,17 +42,18 @@ const entryHttp = {
     })
   },
 
-
-  entryGetById: async (req, res) => {
-
-    const { id } = req.params;
-
-    const entry = await Entry.findById(id).populate("holder").populate({
-      path: "laptop",
-      populate: {
-        path: "holder"
-      }
-    });
+  entryGetHistoricalLearner: async (req, res) => {
+    const { learner } = req.params;
+    const entry = await Entry.find({ documentlearner: learner })
+      .populate("holder")
+      .populate("place")
+      .populate("documentlearner")
+      .populate({
+        path: "laptop",
+        populate: {
+          path: "holder"
+        }
+      })
 
     res.json({
       entry
@@ -59,7 +83,8 @@ const entryHttp = {
       populate: {
         path: "holder"
       }
-    });
+    }).populate("place")
+    .populate("documentlearner");
 
     res.json({
       entry
@@ -89,20 +114,67 @@ const entryHttp = {
       populate: {
         path: "holder"
       }
-    });
+    }).populate("place")
+    .populate("documentlearner");
 
     res.json({
       entry
     })
   },
 
-  
-  entryGetPendientesEntrega: async (req, res) => {
+
+  entryGetPendientesEntregaHolder: async (req, res) => {
     const { id } = req.params;
 
     const entry = await Entry.find({
-      checkout:"",holder:id
-    }).populate("holder").populate({
+      checkout: "", holder:id
+    })
+      .populate("documentlearner")
+      .populate("holder")
+      .populate("place")
+      .populate({
+        path: "laptop",
+        populate: {
+          path: "holder"
+        }
+      });
+
+    res.json({
+      entry
+    })
+  },
+
+  entryGetPendientesEntregaPlace: async (req, res) => {
+    const { id } = req.params;
+
+    const entry = await Entry.find({
+      checkout: "", place:id
+    })
+      .populate("documentlearner")
+      .populate("holder")
+      .populate("place")
+      .populate({
+        path: "laptop",
+        populate: {
+          path: "holder"
+        }
+      });
+
+    res.json({
+      entry
+    })
+  },
+
+
+  entryGetPendientesTotalHolder: async (req, res) => {
+    const { id } = req.params;
+
+    const entry = await Entry.find({
+      checkout: "", holder: id
+    }).populate("documentlearner")
+    .populate("holder")
+    .populate("place")
+    .populate({
       path: "laptop",
       populate: {
         path: "holder"
@@ -110,26 +182,40 @@ const entryHttp = {
     });
 
     res.json({
-      entry
+      total: entry.length
     })
   },
 
-  entryGetPendientesTotal: async (req, res) => {
+  entryGetPendientesTotalPlace: async (req, res) => {
     const { id } = req.params;
 
     const entry = await Entry.find({
-      checkout:"",holder:id
-    })
+      checkout: "", place: id
+    }).populate("documentlearner")
+    .populate("holder")
+    .populate("place")
+    .populate({
+      path: "laptop",
+      populate: {
+        path: "holder"
+      }
+    });
 
     res.json({
-      total:entry.length
+      total: entry.length
     })
   },
 
   entryPost: async (req, res) => {
-    const { holder, laptop } = req.body;
+    const { holder, laptop, documentlearner ,place} = req.body;
     let laptopSearch = await Laptop.findOne({ serial: laptop })
-    const entry = new Entry({ holder, laptop: laptopSearch._id });
+    let entry;
+    if (documentlearner && req.holder.rol == "BIBLIOTECARIA") {
+      const userLearner = await Holder.findOne({ document: documentlearner });
+      entry = new Entry({ holder, laptop: laptopSearch._id, documentlearner: userLearner._id ,place});
+    } else {
+      entry = new Entry({ holder, laptop: laptopSearch._id ,place});
+    }
 
     await entry.save()
 
@@ -138,6 +224,8 @@ const entryHttp = {
     })
 
   },
+
+
 
   entryPut: async (req, res) => {
     const { id } = req.params;

@@ -13,20 +13,26 @@ import holder from '../models/holder.js';
 
 const router=Router();
 
-router.get('/usuario/:id',[
-    validarJWT,
-    check('id', 'No es un ID válido').isMongoId(),
-    check('id').custom(helpersHolder.existeHolderById), 
-    validarCampos   
-],entryHttp.entryGetUsuario );
-
-
 router.get('/:id',[
     validarJWT,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(helpersEntry.existeEntryById), 
     validarCampos   
 ],entryHttp.entryGetById);
+
+router.get('/historical/holder/:holder',[
+    validarJWT,
+    check('holder').isMongoId(),
+    check('holder').custom(helpersHolder.existeHolderById), 
+    validarCampos   
+],entryHttp.entryGetHistoricalHolder);
+
+router.get('/historical/learner/:learner',[
+    validarJWT,
+    check('learner').isMongoId(),
+    check('learner').custom(helpersHolder.existeHolderById), 
+    validarCampos   
+],entryHttp.entryGetHistoricalLearner);
    
 router.get('/date/:datefilter',[
     validarJWT,
@@ -41,33 +47,53 @@ router.get('/date/:initialdate/:finaldate',[
     validarCampos   
 ],entryHttp.entryGetDateBetween);
 
-router.get('/date/pendientes/entrega/:id',[
+router.get('/date/pendientes/entrega/holder/:id',[
     validarJWT,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(helpersHolder.existeHolderById), 
     validarCampos   
-],entryHttp.entryGetPendientesEntrega);
+],entryHttp.entryGetPendientesEntregaHolder);
 
-router.get('/date/pendientes/total/:id',[
+router.get('/date/pendientes/entrega/place/:id',[
     validarJWT,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(helpersHolder.existeHolderById), 
     validarCampos   
-],entryHttp.entryGetPendientesTotal); 
+],entryHttp.entryGetPendientesEntregaPlace);
+
+//###############################3
+
+router.get('/date/pendientes/holder/total/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(helpersHolder.existeHolderById), 
+    validarCampos   
+],entryHttp.entryGetPendientesTotalHolder); 
+
+router.get('/date/pendientes/place/total/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(helpersHolder.existeHolderById), 
+    validarCampos   
+],entryHttp.entryGetPendientesTotalHolder); 
 
 router.post('/',[    
     validarJWT,
-    validarRol('GUARDA','BIBLIOTECA','ADMIN'), 
+    validarRol('GUARDA','BIBLIOTECARIA','ADMIN'), 
+    check('place').not().isEmpty(),
+    check('place').custom(helpersHolder.existeHolderById),
     check('laptop').not().isEmpty(),
     check('laptop').custom(helpersLaptop.existeSerialVerifica), 
     check('holder', 'No es un ID válido').isMongoId(),
     check('holder').custom(helpersHolder.existeHolderById), 
+    check('documentlearner').custom(helpersHolder.existeHolderByDocument), 
     validarCampos       
 ], entryHttp.entryPost   );
 
+
 router.put('/:id',[    
     validarJWT,
-    validarRol('GUARDA','BIBLIOTECA','ADMIN'),  
+    validarRol('GUARDA','BIBLIOTECARIA','ADMIN'),  
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(helpersEntry.existeEntryById), 
     validarCampos       
