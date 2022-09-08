@@ -4,7 +4,7 @@ import Holder from "../models/holder.js";
 
 const entryHttp = {
 
-    entryGetById: async (req, res) => {
+  entryGetById: async (req, res) => {
 
     const { id } = req.params;
 
@@ -24,6 +24,7 @@ const entryHttp = {
     })
   },
 
+  
   entryGetHistoricalHolder: async (req, res) => {
     const { holder } = req.params;
     const entry = await Entry.find({ holder })

@@ -16,7 +16,6 @@ const helpersHolder = {
     existeHolderByDocument: async (document, req) => {      
         
         if (document && req.req.holder.rol == "BIBLIOTECARIA") {
-            console.log("llegue");
             const existe = await Holder.findOne({ document })
 
             if (!existe ) {
@@ -64,9 +63,10 @@ const helpersHolder = {
         if (document) {
             const existe = await Holder.findOne({ document })
             if (existe) {
-                if (req.req.method === "PUT") {
+                if (req.req.method === "PUT") {                    
                     if (existe._id.toString() !== req.req.holder._id.toString())
-                        throw new Error(`Ya existe ese serial en la base de datos!!! ${document}`)
+                        if (req.req.holder.rol != "ADMIN") 
+                            throw new Error(`Ya existe ese documento en la base de datos!!! ${document}`)
 
                 } else {
                     throw new Error(`Ya existe ese documento en la base de datos!!! ${document}`)

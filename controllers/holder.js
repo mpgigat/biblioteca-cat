@@ -8,8 +8,6 @@ import url from 'url'
 import { v2 as cloudinary } from 'cloudinary'
 import sendEmail from "../utils/emails/sendEmail.js"
 import tools from "../helpers/tools.js";
-// CLOUDINARY_URL=cloudinary://124178692885149:x7RpDrJVA9YrpPGIzsddfMHKDCY@dyocmaqis
-// cloudinary.config(process.env.CLOUDINARY_URL)
 
 const holdersHttp = {
 
