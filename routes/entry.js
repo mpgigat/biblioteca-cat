@@ -13,6 +13,12 @@ import holder from '../models/holder.js';
 
 const router=Router();
 
+router.get('/',[
+    validarJWT,
+    validarRol('ADMIN'), 
+    validarCampos   
+],entryHttp.entryGet);
+
 router.get('/:id',[
     validarJWT,
     check('id', 'No es un ID válido').isMongoId(),

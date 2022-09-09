@@ -4,6 +4,26 @@ import Holder from "../models/holder.js";
 
 const entryHttp = {
 
+  entryGet: async (req, res) => {
+
+    const { id } = req.params;
+
+    const entry = await Entry.find()
+      .populate("documentlearner")
+      .populate("place")
+      .populate("holder")
+      .populate({
+        path: "laptop",
+        populate: {
+          path: "holder"
+        }
+      });
+
+    res.json({
+      entry
+    })
+  },
+
   entryGetById: async (req, res) => {
 
     const { id } = req.params;
