@@ -13,7 +13,7 @@ const sendEmail = async (email, subject, payload, template) => {
       secure:true,
       auth: {
         user: process.env.FROM_EMAIL,               
-        pass: "jurrllcivslimnrn", // naturally, replace both with your real credentials or an application-specific password
+        pass: "azskhqhnbeijvhti", // naturally, replace both with your real credentials or an application-specific password
       },
     });
 //hvgsrbzbewuandgt
