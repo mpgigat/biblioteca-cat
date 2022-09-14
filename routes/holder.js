@@ -69,7 +69,7 @@ router.put('/activate/:id',[
 router.put('/unactivate/:id',[
     validarJWT,
     validarRol('ADMIN'), 
-    check('id', 'No es un ID válido').isMongoId(),
+    check('id', 'No es un ID válido').isMongoId(), 
     check('id').custom(helpersHolder.existeHolderById),
     validarCampos
 ],holdersHttp.holderPutDeactivate);
