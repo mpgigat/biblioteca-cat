@@ -13,7 +13,7 @@ const entryHttp = {
       .populate("place")
       .populate("holder")
       .populate({
-        path: "laptop",
+        path: "laptop", 
         populate: {
           path: "holder"
         }
