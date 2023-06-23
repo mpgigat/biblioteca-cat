@@ -10,18 +10,22 @@ import holdersHttp from '../controllers/holder.js';
 
 const router=Router();
 
-router.get('/',[
+router.get(    '/'      ,    [
     validarJWT,
     validarRol('ADMIN'), 
     validarCampos   
-],holdersHttp.holderGet);
+]     ,   holdersHttp.holderGet     );
 
-router.get('/:id',[
+router.get('/:id',        [
     validarJWT,
+    check('descripcion', 'La descripción es obligatoria!').not().isEmpty(),
+    check('password', 'Password no es válido').isLength({ max: 8}),
+    check('movil', 'El movil es obligatorio!').isNumeric(),
+    
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(helpersHolder.existeHolderById), 
     validarCampos   
-],holdersHttp.holderGetById);
+]    ,holdersHttp.holderGetById);
 
 router.get('/rol/:rol',[
     validarJWT,

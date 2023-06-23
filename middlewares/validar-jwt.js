@@ -15,7 +15,6 @@ const generarJWT = (uid) => {
             }
         })
     })
-
 }
 
 const validarJWT = async (req, res, next) => {

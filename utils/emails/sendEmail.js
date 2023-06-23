@@ -3,7 +3,8 @@ import handlebars from "handlebars"
 import * as fs from 'fs'
 import path from 'path'
 import url from 'url'
-
+//https://myaccount.google.com/u/5/security?pageId=none
+//https://www.youtube.com/watch?v=KjheexBLY4A
 const sendEmail = async (email, subject, payload, template) => {
   try {
     // create reusable transporter object using the default SMTP transport

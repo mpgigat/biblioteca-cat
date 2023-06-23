@@ -1,16 +1,17 @@
 import  express from 'express'
 import cors from 'cors'
 import {dbConnection} from '../database/config.js';
+
 import holder from '../routes/holder.js';
+
 import laptop from '../routes/laptop.js'
 import entry from '../routes/entry.js'
 import fileUpload from 'express-fileupload'
 
+
 class Server{
     constructor(){
-        this.app=express();
-        //this.app.set('view engine', 'jade');
-        this.port=process.env.PORT;
+        this.app=express();        
         this.conectarDB();
         this.middlewares();
         this.routes();
@@ -19,7 +20,6 @@ class Server{
     async conectarDB(){
         await dbConnection()
     }
-
     middlewares(){ 
         this.app.use(cors());
         this.app.use(express.json()); 
@@ -31,17 +31,15 @@ class Server{
             createParentPath:true
         }));
     }
-
     routes(){
         this.app.use("/api/holder",    holder);
         this.app.use("/api/laptop",    laptop);
-        this.app.use("/api/entry",    entry);
-        
-    }
+        this.app.use("/api/entry",    entry);        
 
+    }
     listen(){
-        this.app.listen(this.port ,()=>{
-            console.log(`Servidor corriendo en el puerto ${this.port}`);
+        this.app.listen(process.env.PORT ,()=>{
+            console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
         });
     }
 }

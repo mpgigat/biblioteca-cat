@@ -1,8 +1,5 @@
-//const mongoose = require('mongoose');
-import mongoose from 'mongoose';
-//MONGODB_CNN=mongodb+srv://AdsiClases:aNz2J1yc0AFDYIWF@cluster0.zxyca.mongodb.net/sistemaDB
-//MONGODB_CNN=mongodb+srv://admin:82TMB1mgVNOLtdBp@cluster0.rxrvhhp.mongodb.net/biblioteca
 
+import mongoose from 'mongoose';
 const dbConnection=async()=>{
     try {
         
@@ -13,6 +10,4 @@ const dbConnection=async()=>{
     }
 }
 
-export {
-    dbConnection
-}
+export  {dbConnection}

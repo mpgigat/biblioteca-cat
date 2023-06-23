@@ -54,13 +54,6 @@ const holdersHttp = {
          
     holderPost: async (req, res) => {
         const { name, email, password, document, rol, ficha, phone } = req.body;
-        // let createdAt = new Date();
-        // let fecha=new Date("2022-07-19T00:03:27.507Z")
-        // console.log(fecha.getHours());
-        // console.log(fecha.getDate());
-        
-
-        // return
         const holder = new Holder({ name, email, password, document, rol, ficha, phone});
 
         
@@ -160,7 +153,6 @@ const holdersHttp = {
                     msg: "Holder / Password no son correctos"
                 })
             }
-
 
             if (holder.estado === 0) {
                 return res.status(400).json({
